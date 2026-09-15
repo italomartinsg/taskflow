@@ -14,19 +14,20 @@
   </header>
   <main>
     <section class="formulario">
-      <form id="form-criar-task">
+      <form id="form-criar-tarefa">
         <label for="titulo-tarefa">Digite a tarefa:</label>
         <input type="text" id="titulo-tarefa">
 
         <label for="descricao-tarefa">Descrição:</label>
         <textarea name="descricao-tarefa" id="descricao-tarefa"></textarea>
-        <label for="prioridade-task">Prioridade da tarefa:</label>
-        <select name="prioridade-task" id="prioridade-task">
+        <label for="prioridade-tarefa">Prioridade da tarefa:</label>
+        <select name="prioridade-tarefa" id="prioridade-tarefa">
           <option value="low">Baixa</option>
           <option value="medium">Média</option>
           <option value="high">Alta</option>
         </select>
-
+        <label for="prazo-tarefa">Prazo Até:</label>
+        <input type="date" name="prazo-tarefa" id="prazo-tarefa">
         <button type="submit">Enviar</button>
       </form>
     </section>

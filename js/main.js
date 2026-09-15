@@ -1,8 +1,9 @@
-const taskCreationForm = document.querySelector("#form-criar-task");
+const taskCreationForm = document.querySelector("#form-criar-tarefa");
 const taskTitle = document.querySelector("#titulo-tarefa");
 const taskList = document.querySelector(".task-fazer");
-const taskPriority = document.querySelector("#prioridade-task");
+const taskPriority = document.querySelector("#prioridade-tarefa");
 const taskDescription = document.querySelector("#descricao-tarefa");
+const taskDueDate = document.querySelector("#prazo-tarefa");
 
 const tasks = [
   {
@@ -10,18 +11,21 @@ const tasks = [
     title: "Estudar JavaScript",
     description: "Terminar o projeto TaskFlow",
     priority: "high",
+    dueDate: "",
   },
   {
     id: 2,
     title: "Atualizar currículo",
     description: "Adicionar projetos finalizados",
     priority: "medium",
+    dueDate: "2026-09-23",
   },
   {
     id: 3,
     title: "Treinar",
     description: "Ao menos 40min de exercício diário",
     priority: "high",
+    dueDate: "2026-10-26",
   },
 ];
 
@@ -40,9 +44,10 @@ function renderTasks() {
   taskList.textContent = "";
   tasks.forEach((task) => {
     const taskItem = document.createElement("li");
-    const btnRemove = document.createElement("button");
     const description = document.createElement("p");
     const priority = document.createElement("p");
+    const dueDate = document.createElement("p");
+    const btnRemove = document.createElement("button");
 
     taskItem.dataset.id = task.id;
     taskItem.textContent = task.title;
@@ -66,6 +71,10 @@ function renderTasks() {
 
     taskItem.appendChild(description);
     taskItem.appendChild(priority);
+    if (task.dueDate) {
+      dueDate.textContent = task.dueDate.split("-").reverse().join("/");
+      taskItem.appendChild(dueDate);
+    }
     taskItem.appendChild(btnRemove);
     taskList.appendChild(taskItem);
   });
@@ -78,11 +87,28 @@ function handleCreateTask(event) {
   if (!title) {
     return;
   }
+
+  const currentDate = new Date();
+  const arrayCurrentDate = [
+    currentDate.getFullYear(),
+    (currentDate.getMonth() + 1).toString().padStart(2, 0),
+    currentDate.getDate().toString().padStart(2, 0),
+  ];
+  const currentDateTransform = arrayCurrentDate.join("-");
+
+  if (taskDueDate.value !== "") {
+    if (taskDueDate.value < currentDateTransform) {
+      console.log("data da task é menor que a data de hoje");
+      return;
+    }
+  }
+
   const taskObj = {
     id: getId(),
     title: title,
     description: taskDescription.value.trim(),
     priority: taskPriority.value,
+    dueDate: taskDueDate.value,
   };
 
   tasks.push(taskObj);
@@ -90,6 +116,7 @@ function handleCreateTask(event) {
   taskTitle.value = "";
   taskDescription.value = "";
   taskPriority.value = "low";
+  taskDueDate.value = "";
   renderTasks();
 }
 function removeTask(id) {

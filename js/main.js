@@ -1,10 +1,10 @@
 const taskCreationForm = document.querySelector("#form-criar-tarefa");
 const taskTitle = document.querySelector("#titulo-tarefa");
-const taskList = document.querySelector(".task-fazer");
 const taskPriority = document.querySelector("#prioridade-tarefa");
 const taskDescription = document.querySelector("#descricao-tarefa");
 const taskDueDate = document.querySelector("#prazo-tarefa");
 const btnForm = document.querySelector("#btn-enviar-tarefa");
+const columnsTask = document.querySelectorAll("[data-status]");
 let editingTaskId = null;
 
 const tasks = [
@@ -14,6 +14,7 @@ const tasks = [
     description: "Terminar o projeto TaskFlow",
     priority: "high",
     dueDate: "",
+    status: "in-progress",
   },
   {
     id: 2,
@@ -21,6 +22,7 @@ const tasks = [
     description: "Adicionar projetos finalizados",
     priority: "medium",
     dueDate: "2026-09-23",
+    status: "todo",
   },
   {
     id: 3,
@@ -28,6 +30,7 @@ const tasks = [
     description: "Ao menos 40min de exercício diário",
     priority: "high",
     dueDate: "2026-10-26",
+    status: "done",
   },
 ];
 
@@ -43,8 +46,12 @@ function getId() {
 }
 
 function renderTasks() {
-  taskList.textContent = "";
+  columnsTask.forEach((column) => {
+    column.textContent = "";
+  });
+
   tasks.forEach((task) => {
+    let correctList;
     const taskItem = document.createElement("li");
     const description = document.createElement("p");
     const priority = document.createElement("p");
@@ -84,7 +91,14 @@ function renderTasks() {
     }
     taskItem.appendChild(btnEdit);
     taskItem.appendChild(btnRemove);
-    taskList.appendChild(taskItem);
+
+    columnsTask.forEach((column) => {
+      if (task.status === column.dataset.status) {
+        correctList = column;
+        return;
+      }
+    });
+    correctList.appendChild(taskItem);
   });
 }
 
@@ -123,6 +137,7 @@ function handleCreateTask(event) {
         description: taskDescription.value.trim(),
         priority: taskPriority.value,
         dueDate: taskDueDate.value,
+        status: tasks[findIndexTaskEdit].status,
       };
       tasks[findIndexTaskEdit] = taskEditObj;
     }
@@ -135,6 +150,7 @@ function handleCreateTask(event) {
       description: taskDescription.value.trim(),
       priority: taskPriority.value,
       dueDate: taskDueDate.value,
+      status: "todo",
     };
 
     tasks.push(taskObj);
@@ -186,4 +202,6 @@ function handleTaskList(event) {
 renderTasks();
 
 taskCreationForm.addEventListener("submit", handleCreateTask);
-taskList.addEventListener("click", handleTaskList);
+columnsTask.forEach((column) => {
+  column.addEventListener("click", handleTaskList);
+});

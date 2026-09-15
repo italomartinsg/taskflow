@@ -2,11 +2,27 @@ const taskCreationForm = document.querySelector("#form-criar-task");
 const taskTitle = document.querySelector("#titulo-tarefa");
 const taskList = document.querySelector(".task-fazer");
 const taskPriority = document.querySelector("#prioridade-task");
+const taskDescription = document.querySelector("#descricao-tarefa");
 
 const tasks = [
-  { id: 1, title: "Estudar JavaScript", priority: "high" },
-  { id: 2, title: "Atualizar currículo", priority: "medium" },
-  { id: 3, title: "Treinar", priority: "high" },
+  {
+    id: 1,
+    title: "Estudar JavaScript",
+    description: "Terminar o projeto TaskFlow",
+    priority: "high",
+  },
+  {
+    id: 2,
+    title: "Atualizar currículo",
+    description: "Adicionar projetos finalizados",
+    priority: "medium",
+  },
+  {
+    id: 3,
+    title: "Treinar",
+    description: "Ao menos 40min de exercício diário",
+    priority: "high",
+  },
 ];
 
 function getId() {
@@ -25,13 +41,13 @@ function renderTasks() {
   tasks.forEach((task) => {
     const taskItem = document.createElement("li");
     const btnRemove = document.createElement("button");
+    const description = document.createElement("p");
     const priority = document.createElement("p");
 
     taskItem.dataset.id = task.id;
     taskItem.textContent = task.title;
 
-    btnRemove.textContent = "Remover";
-    btnRemove.dataset.action = "remove";
+    description.textContent = task.description;
 
     switch (task.priority) {
       case "medium":
@@ -45,6 +61,10 @@ function renderTasks() {
         break;
     }
 
+    btnRemove.textContent = "Remover";
+    btnRemove.dataset.action = "remove";
+
+    taskItem.appendChild(description);
     taskItem.appendChild(priority);
     taskItem.appendChild(btnRemove);
     taskList.appendChild(taskItem);
@@ -61,11 +81,14 @@ function handleCreateTask(event) {
   const taskObj = {
     id: getId(),
     title: title,
+    description: taskDescription.value.trim(),
     priority: taskPriority.value,
   };
 
   tasks.push(taskObj);
+
   taskTitle.value = "";
+  taskDescription.value = "";
   taskPriority.value = "low";
   renderTasks();
 }

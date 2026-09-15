@@ -4,6 +4,8 @@ const taskList = document.querySelector(".task-fazer");
 const taskPriority = document.querySelector("#prioridade-tarefa");
 const taskDescription = document.querySelector("#descricao-tarefa");
 const taskDueDate = document.querySelector("#prazo-tarefa");
+const btnForm = document.querySelector("#btn-enviar-tarefa");
+let editingTaskId = null;
 
 const tasks = [
   {
@@ -47,6 +49,7 @@ function renderTasks() {
     const description = document.createElement("p");
     const priority = document.createElement("p");
     const dueDate = document.createElement("p");
+    const btnEdit = document.createElement("button");
     const btnRemove = document.createElement("button");
 
     taskItem.dataset.id = task.id;
@@ -66,15 +69,20 @@ function renderTasks() {
         break;
     }
 
+    btnEdit.textContent = "Editar";
+    btnEdit.dataset.action = "edit";
+
     btnRemove.textContent = "Remover";
     btnRemove.dataset.action = "remove";
 
     taskItem.appendChild(description);
     taskItem.appendChild(priority);
     if (task.dueDate) {
-      dueDate.textContent = task.dueDate.split("-").reverse().join("/");
+      dueDate.textContent =
+        "Data de Entrega: " + task.dueDate.split("-").reverse().join("/");
       taskItem.appendChild(dueDate);
     }
+    taskItem.appendChild(btnEdit);
     taskItem.appendChild(btnRemove);
     taskList.appendChild(taskItem);
   });
@@ -103,22 +111,41 @@ function handleCreateTask(event) {
     }
   }
 
-  const taskObj = {
-    id: getId(),
-    title: title,
-    description: taskDescription.value.trim(),
-    priority: taskPriority.value,
-    dueDate: taskDueDate.value,
-  };
+  if (editingTaskId !== null) {
+    const findIndexTaskEdit = tasks.findIndex((task) => {
+      return task.id === editingTaskId;
+    });
 
-  tasks.push(taskObj);
+    if (findIndexTaskEdit !== -1) {
+      const taskEditObj = {
+        id: editingTaskId,
+        title: title,
+        description: taskDescription.value.trim(),
+        priority: taskPriority.value,
+        dueDate: taskDueDate.value,
+      };
+      tasks[findIndexTaskEdit] = taskEditObj;
+    }
+    editingTaskId = null;
+    btnForm.textContent = "Enviar";
+  } else {
+    const taskObj = {
+      id: getId(),
+      title: title,
+      description: taskDescription.value.trim(),
+      priority: taskPriority.value,
+      dueDate: taskDueDate.value,
+    };
 
+    tasks.push(taskObj);
+  }
   taskTitle.value = "";
   taskDescription.value = "";
   taskPriority.value = "low";
   taskDueDate.value = "";
   renderTasks();
 }
+
 function removeTask(id) {
   const indexTask = tasks.findIndex((task) => {
     return task.id === id;
@@ -129,9 +156,30 @@ function removeTask(id) {
   }
 }
 
+function editTask(id) {
+  const taskFind = tasks.find((task) => {
+    if (task.id === id) {
+      return task;
+    }
+  });
+  if (!taskFind) {
+    return;
+  }
+
+  editingTaskId = id;
+  taskTitle.value = taskFind.title;
+  taskDescription.value = taskFind.description;
+  taskPriority.value = taskFind.priority;
+  taskDueDate.value = taskFind.dueDate;
+  btnForm.textContent = "Salvar";
+}
+
 function handleTaskList(event) {
   if (event.target.dataset.action === "remove") {
     removeTask(+event.target.parentElement.dataset.id);
+  }
+  if (event.target.dataset.action === "edit") {
+    editTask(+event.target.parentElement.dataset.id);
   }
 }
 

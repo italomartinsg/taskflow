@@ -8,8 +8,7 @@ const columnsTask = document.querySelectorAll("[data-status]");
 const filterTask = document.querySelector("#task-filter");
 const modal = document.querySelector("#modal-formulario");
 const btnNewTask = document.querySelector("#nova-tarefa");
-
-let editingTaskId = null;
+const formErrors = document.querySelectorAll(".form-error");
 let currentPriorityFilter = "all";
 const tasks = [];
 
@@ -67,13 +66,20 @@ function renderTasks(currentTask) {
     const dueDate = document.createElement("p");
     const btnEdit = document.createElement("button");
     const btnRemove = document.createElement("button");
+    const label = document.createElement("label");
+    const select = document.createElement("select");
+    const todoOption = document.createElement("option");
+    const inProgressOption = document.createElement("option");
+    const doneOption = document.createElement("option");
 
     taskItem.dataset.id = task.id;
     taskTitle.textContent = task.title;
     taskTitle.classList.add("task-title");
+    taskItem.appendChild(taskTitle);
 
     description.textContent = task.description;
     description.classList.add("task-description");
+    taskItem.appendChild(description);
 
     switch (task.priority) {
       case "medium":
@@ -87,18 +93,8 @@ function renderTasks(currentTask) {
         break;
     }
     priority.classList.add("task-priority", `task-priority-${task.priority}`);
-
-    btnEdit.textContent = "Editar";
-    btnEdit.dataset.action = "edit";
-    btnEdit.classList.add("btn-task", "btn-task-edit");
-
-    btnRemove.textContent = "Remover";
-    btnRemove.dataset.action = "remove";
-    btnRemove.classList.add("btn-task", "btn-task-remove");
-
-    taskItem.appendChild(taskTitle);
-    taskItem.appendChild(description);
     taskItem.appendChild(priority);
+
     if (task.dueDate) {
       dueDate.classList.add("task-due-date");
       dueDate.textContent =
@@ -106,7 +102,40 @@ function renderTasks(currentTask) {
 
       taskItem.appendChild(dueDate);
     }
+
+    label.setAttribute("for", `change-status-${task.id}`);
+    label.classList.add("task-status-control");
+    label.textContent = " Alterar status:";
+    taskItem.appendChild(label);
+
+    select.setAttribute("name", "change-status");
+    select.setAttribute("id", `change-status-${task.id}`);
+    select.classList.add("task-status-control");
+    todoOption.value = "todo";
+    todoOption.textContent = "A fazer";
+    inProgressOption.value = "in-progress";
+    inProgressOption.textContent = "Em Andamento";
+    doneOption.value = "done";
+    doneOption.textContent = "Concluída";
+
+    select.append(todoOption, inProgressOption, doneOption);
+
+    select.value = task.status;
+    taskItem.appendChild(select);
+    select.addEventListener("change", () => {
+      task.status = select.value;
+      saveTasksOnStorage();
+      renderFilteredTasks();
+    });
+
+    btnEdit.textContent = "Editar";
+    btnEdit.dataset.action = "edit";
+    btnEdit.classList.add("btn-task", "btn-task-edit");
     taskItem.appendChild(btnEdit);
+
+    btnRemove.textContent = "Remover";
+    btnRemove.dataset.action = "remove";
+    btnRemove.classList.add("btn-task", "btn-task-remove");
     taskItem.appendChild(btnRemove);
 
     columnsTask.forEach((column) => {
@@ -120,17 +149,29 @@ function renderTasks(currentTask) {
       event.dataTransfer.setData("text/plain", taskItem.dataset.id);
     });
     taskItem.classList.add(task.status);
-    if (task.status) {
+
+    if (correctList) {
       correctList.appendChild(taskItem);
+    }
+  });
+  columnsTask.forEach((column) => {
+    if (column.children.length === 0) {
+      const noTasksMessage = document.createElement("p");
+      noTasksMessage.textContent = "Nenhuma Tarefa";
+      noTasksMessage.style.textAlign = "center";
+      column.appendChild(noTasksMessage);
     }
   });
 }
 
 function handleCreateTask(event) {
   event.preventDefault();
+  clearErrorForm();
+
   const title = taskTitle.value.trim();
 
   if (!title) {
+    showError("title", "Preencha um título para a tarefa.");
     return;
   }
 
@@ -144,7 +185,7 @@ function handleCreateTask(event) {
 
   if (taskDueDate.value !== "") {
     if (taskDueDate.value < currentDateTransform) {
-      console.log("data da task é menor que a data de hoje");
+      showError("date", "Selecione o dia atual ou uma data futura.");
       return;
     }
   }
@@ -166,6 +207,7 @@ function handleCreateTask(event) {
       tasks[findIndexTaskEdit] = taskEditObj;
       saveTasksOnStorage();
       modal.close();
+      clearErrorForm();
     }
     editingTaskId = null;
     btnForm.textContent = "Enviar";
@@ -181,6 +223,7 @@ function handleCreateTask(event) {
 
     tasks.push(taskObj);
     modal.close();
+    clearErrorForm();
     saveTasksOnStorage();
   }
   taskTitle.value = "";
@@ -190,6 +233,18 @@ function handleCreateTask(event) {
   renderFilteredTasks();
 }
 
+function showError(element, message) {
+  formErrors.forEach((error) => {
+    if (error.dataset.errorLocation === element) {
+      error.textContent = message;
+    }
+  });
+}
+function clearErrorForm() {
+  formErrors.forEach((error) => {
+    error.textContent = "";
+  });
+}
 function removeTask(id) {
   const indexTask = tasks.findIndex((task) => {
     return task.id === id;
@@ -264,6 +319,9 @@ btnNewTask.addEventListener("click", () => {
   taskDueDate.value = "";
   btnForm.textContent = "Enviar";
   modal.showModal();
+});
+modal.addEventListener("close", () => {
+  clearErrorForm();
 });
 
 loadTasksFromStorage();

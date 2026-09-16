@@ -21,6 +21,7 @@
         <form id="form-criar-tarefa">
           <label for="titulo-tarefa">Digite a tarefa:</label>
           <input type="text" id="titulo-tarefa">
+          <p class="form-error title" data-error-location="title" aria-live="polite"></p>
 
           <label for="descricao-tarefa">Descrição:</label>
           <textarea name="descricao-tarefa" id="descricao-tarefa"></textarea>
@@ -36,8 +37,9 @@
               <label for="prazo-tarefa">Prazo Até:</label>
               <input type="date" name="prazo-tarefa" id="prazo-tarefa">
             </div>
-          </div>
 
+          </div>
+          <p class="form-error" data-error-location="date" aria-live="polite"></p>
 
           <button type="submit" id="btn-enviar-tarefa">Enviar</button>
         </form>

@@ -13,24 +13,27 @@
     <h1>TaskFlow</h1>
   </header>
   <main>
-    <section class="formulario">
-      <form id="form-criar-tarefa">
-        <label for="titulo-tarefa">Digite a tarefa:</label>
-        <input type="text" id="titulo-tarefa">
+    <dialog id="modal-formulario">
+      <section class="formulario">
+        <form id="form-criar-tarefa">
+          <label for="titulo-tarefa">Digite a tarefa:</label>
+          <input type="text" id="titulo-tarefa">
 
-        <label for="descricao-tarefa">Descrição:</label>
-        <textarea name="descricao-tarefa" id="descricao-tarefa"></textarea>
-        <label for="prioridade-tarefa">Prioridade da tarefa:</label>
-        <select name="prioridade-tarefa" id="prioridade-tarefa">
-          <option value="low">Baixa</option>
-          <option value="medium">Média</option>
-          <option value="high">Alta</option>
-        </select>
-        <label for="prazo-tarefa">Prazo Até:</label>
-        <input type="date" name="prazo-tarefa" id="prazo-tarefa">
-        <button type="submit" id="btn-enviar-tarefa">Enviar</button>
-      </form>
-    </section>
+          <label for="descricao-tarefa">Descrição:</label>
+          <textarea name="descricao-tarefa" id="descricao-tarefa"></textarea>
+          <label for="prioridade-tarefa">Prioridade da tarefa:</label>
+          <select name="prioridade-tarefa" id="prioridade-tarefa">
+            <option value="low">Baixa</option>
+            <option value="medium">Média</option>
+            <option value="high">Alta</option>
+          </select>
+          <label for="prazo-tarefa">Prazo Até:</label>
+          <input type="date" name="prazo-tarefa" id="prazo-tarefa">
+          <button type="submit" id="btn-enviar-tarefa">Enviar</button>
+        </form>
+      </section>
+    </dialog>
+    <button id="nova-tarefa">Adicionar Nova Tarefa</button>
     <section class="painel-acoes">
       <label for="task-filter">Filtrar por Prioridade:</label>
       <select name="task-filter" id="task-filter">
@@ -41,6 +44,7 @@
       </select>
 
     </section>
+
     <section class="painel-task">
       <h2>A fazer</h2>
       <ul class="task-coluna task-fazer" data-status="todo"></ul>

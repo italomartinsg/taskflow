@@ -6,6 +6,8 @@ const taskDueDate = document.querySelector("#prazo-tarefa");
 const btnForm = document.querySelector("#btn-enviar-tarefa");
 const columnsTask = document.querySelectorAll("[data-status]");
 const filterTask = document.querySelector("#task-filter");
+const modal = document.querySelector("#modal-formulario");
+const btnNewTask = document.querySelector("#nova-tarefa");
 
 let editingTaskId = null;
 let currentPriorityFilter = "all";
@@ -152,6 +154,7 @@ function handleCreateTask(event) {
       };
       tasks[findIndexTaskEdit] = taskEditObj;
       saveTasksOnStorage();
+      modal.close();
     }
     editingTaskId = null;
     btnForm.textContent = "Enviar";
@@ -166,6 +169,7 @@ function handleCreateTask(event) {
     };
 
     tasks.push(taskObj);
+    modal.close();
     saveTasksOnStorage();
   }
   taskTitle.value = "";
@@ -195,7 +199,7 @@ function editTask(id) {
   if (!taskFind) {
     return;
   }
-
+  modal.showModal();
   editingTaskId = id;
   taskTitle.value = taskFind.title;
   taskDescription.value = taskFind.description;
@@ -241,5 +245,15 @@ columnsTask.forEach((column) => {
     }
   });
 });
+btnNewTask.addEventListener("click", () => {
+  editingTaskId = null;
+  taskTitle.value = "";
+  taskDescription.value = "";
+  taskPriority.value = "low";
+  taskDueDate.value = "";
+  btnForm.textContent = "Enviar";
+  modal.showModal();
+});
+
 loadTasksFromStorage();
 renderFilteredTasks();

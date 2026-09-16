@@ -98,6 +98,11 @@ function renderTasks() {
         return;
       }
     });
+    taskItem.setAttribute("draggable", "true");
+    taskItem.addEventListener("dragstart", (event) => {
+      event.dataTransfer.setData("text/plain", taskItem.dataset.id);
+    });
+
     correctList.appendChild(taskItem);
   });
 }
@@ -199,9 +204,23 @@ function handleTaskList(event) {
   }
 }
 
-renderTasks();
-
 taskCreationForm.addEventListener("submit", handleCreateTask);
 columnsTask.forEach((column) => {
   column.addEventListener("click", handleTaskList);
+  column.addEventListener("dragover", (event) => {
+    event.preventDefault();
+  });
+
+  column.addEventListener("drop", (event) => {
+    const taskId = +event.dataTransfer.getData("text/plain");
+    const taskFound = tasks.find((task) => {
+      return task.id === taskId;
+    });
+    if (taskFound) {
+      taskFound.status = column.dataset.status;
+      renderTasks();
+    }
+  });
 });
+
+renderTasks();

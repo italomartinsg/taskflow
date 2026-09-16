@@ -1,3 +1,229 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background: #121a2e;
+  color: white;
+  font-family: inter;
+}
+main {
+  max-width: 1200px;
+  margin: auto;
+  padding: 24px;
+}
+h1 {
+  text-align: center;
+  margin-top: 38px;
+  font-size: 50px;
+}
+
+#modal-formulario {
+  max-width: 500px;
+  width: calc(100% - 32px);
+  margin: auto;
+  background: #192036;
+  padding: 24px;
+  border: 3px solid #1a2334;
+  border-radius: 12px;
+}
+#modal-formulario::backdrop {
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+#form-criar-tarefa {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 10px;
+}
+#form-criar-tarefa label {
+  color: #cbd5e1;
+}
+#form-criar-tarefa #titulo-tarefa {
+  background: #202943;
+  height: 36px;
+  border: 1px solid #334155;
+  font-size: 1.2rem;
+  color: #f8fafc;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+#form-criar-tarefa #descricao-tarefa {
+  background: #202943;
+  border: 1px solid #334155;
+  font-size: 1rem;
+  color: #f8fafc;
+  padding: 12px;
+  resize: none;
+  margin-bottom: 8px;
+}
+.task-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#form-criar-tarefa #prioridade-tarefa {
+  background: #202943;
+  border: 1px solid #334155;
+  color: #f8fafc;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+#form-criar-tarefa #prazo-tarefa {
+  background: #202943;
+  border: 1px solid #334155;
+  color: #f8fafc;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+#form-criar-tarefa #btn-enviar-tarefa {
+  background: #2563eb;
+  color: #fff;
+  padding: 8px 15px;
+  border: 1px solid #2563eb;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#form-criar-tarefa #btn-enviar-tarefa:hover {
+  background: #1d4ed8;
+}
+.painel-acoes {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 44px;
+}
+#task-filter {
+  background: #202943;
+  color: #f8f4fc;
+  border: 1px solid #334155;
+  border-radius: 4px;
+}
+#nova-tarefa {
+  background: #2563eb;
+  color: #fff;
+  padding: 8px 15px;
+  border: 1px solid #2563eb;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#nova-tarefa:hover {
+  background: #1d4ed8;
+}
+
+.painel-task {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+  margin-top: 44px;
+}
+.painel-coluna {
+  background: #192036;
+  padding: 15px 18px;
+  border-radius: 8px;
+  border: 3px solid #1a2334;
+}
+.titulo-coluna {
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 1.3rem;
+}
+.titulo-coluna.todo {
+  color: #fb7185;
+}
+.titulo-coluna.in-progress {
+  color: #e9b308;
+}
+.titulo-coluna.done {
+  color: #22c45e;
+}
 .task-coluna {
-  min-height: 200px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 10px;
+}
+
+.task-coluna li {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #202943;
+  border-radius: 8px;
+  padding: 15px;
+  cursor: grab;
+}
+.task-coluna .todo {
+  border-left: 4px solid #f87171;
+}
+.task-coluna .in-progress {
+  border-left: 4px solid #f59e0b;
+}
+
+.task-coluna .done {
+  border-left: 4px solid #22c45e;
+}
+.task-title {
+  color: #f8fafc;
+}
+
+.task-description {
+  color: #94a3b8;
+  margin-top: 8px;
+  font-size: 0.9rem;
+}
+.task-priority {
+  margin-top: 20px;
+  font-size: 0.756rem;
+}
+.task-priority-low {
+  color: #22c55e;
+}
+.task-priority-medium {
+  color: #f59e0b;
+}
+.task-priority-high {
+  color: #ef4444;
+}
+.task-due-date {
+  color: #cbd5e1;
+  font-size: 0.8rem;
+}
+
+.btn-task {
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.btn-task-edit {
+  background: #334155;
+  color: #f8fafc;
+}
+.btn-task-edit:hover {
+  background: #475569;
+}
+.btn-task-remove {
+  background: #5f1f24;
+  color: #fca5a5;
+}
+.btn-task-remove:hover {
+  background: #7f1d1d;
 }

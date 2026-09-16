@@ -5,6 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TaskFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/style.css">
 </head>
 
@@ -21,38 +24,54 @@
 
           <label for="descricao-tarefa">Descrição:</label>
           <textarea name="descricao-tarefa" id="descricao-tarefa"></textarea>
-          <label for="prioridade-tarefa">Prioridade da tarefa:</label>
-          <select name="prioridade-tarefa" id="prioridade-tarefa">
-            <option value="low">Baixa</option>
-            <option value="medium">Média</option>
-            <option value="high">Alta</option>
-          </select>
-          <label for="prazo-tarefa">Prazo Até:</label>
-          <input type="date" name="prazo-tarefa" id="prazo-tarefa">
+          <div class="task-meta">
+            <div class="form-field"> <label for="prioridade-tarefa">Prioridade da tarefa:</label>
+              <select name="prioridade-tarefa" id="prioridade-tarefa">
+                <option value="low">Baixa</option>
+                <option value="medium">Média</option>
+                <option value="high">Alta</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="prazo-tarefa">Prazo Até:</label>
+              <input type="date" name="prazo-tarefa" id="prazo-tarefa">
+            </div>
+          </div>
+
+
           <button type="submit" id="btn-enviar-tarefa">Enviar</button>
         </form>
       </section>
     </dialog>
-    <button id="nova-tarefa">Adicionar Nova Tarefa</button>
+
     <section class="painel-acoes">
-      <label for="task-filter">Filtrar por Prioridade:</label>
-      <select name="task-filter" id="task-filter">
-        <option value="all">Todas</option>
-        <option value="low">Baixa</option>
-        <option value="medium">Média</option>
-        <option value="high">Alta</option>
-      </select>
+      <div>
+        <label for="task-filter">Filtrar por Prioridade:</label>
+        <select name="task-filter" id="task-filter">
+          <option value="all">Todas</option>
+          <option value="low">Baixa</option>
+          <option value="medium">Média</option>
+          <option value="high">Alta</option>
+        </select>
+      </div>
+      <button id="nova-tarefa">Adicionar Nova Tarefa</button>
+
 
     </section>
 
     <section class="painel-task">
-      <h2>A fazer</h2>
-      <ul class="task-coluna task-fazer" data-status="todo"></ul>
-      <h2>Em Andamento</h2>
-      <ul class="task-coluna task-andamento" data-status="in-progress"></ul>
-      <h2>Concluída</h2>
-      <ul class="task-coluna task-concluida" data-status="done"></ul>
-
+      <div class="painel-coluna">
+        <h2 class="titulo-coluna todo">A fazer</h2>
+        <ul class="task-coluna task-fazer" data-status="todo"></ul>
+      </div>
+      <div class="painel-coluna">
+        <h2 class="titulo-coluna in-progress">Em Andamento</h2>
+        <ul class="task-coluna task-andamento" data-status="in-progress"></ul>
+      </div>
+      <div class="painel-coluna">
+        <h2 class="titulo-coluna done">Concluída</h2>
+        <ul class="task-coluna task-concluida" data-status="done"></ul>
+      </div>
 
     </section>
   </main>

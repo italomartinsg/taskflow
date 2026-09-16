@@ -61,6 +61,7 @@ function renderTasks(currentTask) {
   currentTask.forEach((task) => {
     let correctList;
     const taskItem = document.createElement("li");
+    const taskTitle = document.createElement("h3");
     const description = document.createElement("p");
     const priority = document.createElement("p");
     const dueDate = document.createElement("p");
@@ -68,9 +69,11 @@ function renderTasks(currentTask) {
     const btnRemove = document.createElement("button");
 
     taskItem.dataset.id = task.id;
-    taskItem.textContent = task.title;
+    taskTitle.textContent = task.title;
+    taskTitle.classList.add("task-title");
 
     description.textContent = task.description;
+    description.classList.add("task-description");
 
     switch (task.priority) {
       case "medium":
@@ -83,18 +86,24 @@ function renderTasks(currentTask) {
         priority.textContent = `Prioridade: Baixa`;
         break;
     }
+    priority.classList.add("task-priority", `task-priority-${task.priority}`);
 
     btnEdit.textContent = "Editar";
     btnEdit.dataset.action = "edit";
+    btnEdit.classList.add("btn-task", "btn-task-edit");
 
     btnRemove.textContent = "Remover";
     btnRemove.dataset.action = "remove";
+    btnRemove.classList.add("btn-task", "btn-task-remove");
 
+    taskItem.appendChild(taskTitle);
     taskItem.appendChild(description);
     taskItem.appendChild(priority);
     if (task.dueDate) {
+      dueDate.classList.add("task-due-date");
       dueDate.textContent =
         "Data de Entrega: " + task.dueDate.split("-").reverse().join("/");
+
       taskItem.appendChild(dueDate);
     }
     taskItem.appendChild(btnEdit);
@@ -110,8 +119,10 @@ function renderTasks(currentTask) {
     taskItem.addEventListener("dragstart", (event) => {
       event.dataTransfer.setData("text/plain", taskItem.dataset.id);
     });
-
-    correctList.appendChild(taskItem);
+    taskItem.classList.add(task.status);
+    if (task.status) {
+      correctList.appendChild(taskItem);
+    }
   });
 }
 

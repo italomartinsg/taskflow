@@ -5,8 +5,10 @@ const taskDescription = document.querySelector("#descricao-tarefa");
 const taskDueDate = document.querySelector("#prazo-tarefa");
 const btnForm = document.querySelector("#btn-enviar-tarefa");
 const columnsTask = document.querySelectorAll("[data-status]");
-let editingTaskId = null;
+const filterTask = document.querySelector("#task-filter");
 
+let editingTaskId = null;
+let currentPriorityFilter = "all";
 const tasks = [];
 
 function loadTasksFromStorage() {
@@ -25,6 +27,16 @@ function loadTasksFromStorage() {
   }
 }
 
+function renderFilteredTasks() {
+  if (currentPriorityFilter === "all") {
+    renderTasks(tasks);
+  } else {
+    const taskCurrentPriorityFilter = tasks.filter((task) => {
+      return task.priority === currentPriorityFilter;
+    });
+    renderTasks(taskCurrentPriorityFilter);
+  }
+}
 function getId() {
   const highestId = tasks.reduce((accumulator, currentValue) => {
     if (accumulator < currentValue.id) {
@@ -36,12 +48,15 @@ function getId() {
   return highestId + 1;
 }
 
-function renderTasks() {
+function renderTasks(currentTask) {
   columnsTask.forEach((column) => {
     column.textContent = "";
   });
+  if (!currentTask) {
+    currentTask = tasks;
+  }
 
-  tasks.forEach((task) => {
+  currentTask.forEach((task) => {
     let correctList;
     const taskItem = document.createElement("li");
     const description = document.createElement("p");
@@ -157,7 +172,7 @@ function handleCreateTask(event) {
   taskDescription.value = "";
   taskPriority.value = "low";
   taskDueDate.value = "";
-  renderTasks();
+  renderFilteredTasks();
 }
 
 function removeTask(id) {
@@ -167,7 +182,7 @@ function removeTask(id) {
   if (indexTask !== -1) {
     tasks.splice(indexTask, 1);
     saveTasksOnStorage();
-    renderTasks();
+    renderFilteredTasks();
   }
 }
 
@@ -204,6 +219,10 @@ function saveTasksOnStorage() {
 }
 
 taskCreationForm.addEventListener("submit", handleCreateTask);
+filterTask.addEventListener("change", () => {
+  currentPriorityFilter = filterTask.value;
+  renderFilteredTasks();
+});
 columnsTask.forEach((column) => {
   column.addEventListener("click", handleTaskList);
   column.addEventListener("dragover", (event) => {
@@ -218,9 +237,9 @@ columnsTask.forEach((column) => {
     if (taskFound) {
       taskFound.status = column.dataset.status;
       saveTasksOnStorage();
-      renderTasks();
+      renderFilteredTasks();
     }
   });
 });
 loadTasksFromStorage();
-renderTasks();
+renderFilteredTasks();

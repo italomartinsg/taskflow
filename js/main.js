@@ -7,32 +7,23 @@ const btnForm = document.querySelector("#btn-enviar-tarefa");
 const columnsTask = document.querySelectorAll("[data-status]");
 let editingTaskId = null;
 
-const tasks = [
-  {
-    id: 1,
-    title: "Estudar JavaScript",
-    description: "Terminar o projeto TaskFlow",
-    priority: "high",
-    dueDate: "",
-    status: "in-progress",
-  },
-  {
-    id: 2,
-    title: "Atualizar currículo",
-    description: "Adicionar projetos finalizados",
-    priority: "medium",
-    dueDate: "2026-09-23",
-    status: "todo",
-  },
-  {
-    id: 3,
-    title: "Treinar",
-    description: "Ao menos 40min de exercício diário",
-    priority: "high",
-    dueDate: "2026-10-26",
-    status: "done",
-  },
-];
+const tasks = [];
+
+function loadTasksFromStorage() {
+  const storedTasks = localStorage.getItem("taskflow-tasks");
+  if (storedTasks) {
+    try {
+      const storedTasksObj = JSON.parse(storedTasks);
+      if (Array.isArray(storedTasksObj)) {
+        tasks.push(...storedTasksObj);
+      } else {
+        localStorage.removeItem("taskflow-tasks");
+      }
+    } catch (error) {
+      console.log(error, "não foi possivel puxar os dados do localStorage");
+    }
+  }
+}
 
 function getId() {
   const highestId = tasks.reduce((accumulator, currentValue) => {
@@ -145,6 +136,7 @@ function handleCreateTask(event) {
         status: tasks[findIndexTaskEdit].status,
       };
       tasks[findIndexTaskEdit] = taskEditObj;
+      saveTasksOnStorage();
     }
     editingTaskId = null;
     btnForm.textContent = "Enviar";
@@ -159,6 +151,7 @@ function handleCreateTask(event) {
     };
 
     tasks.push(taskObj);
+    saveTasksOnStorage();
   }
   taskTitle.value = "";
   taskDescription.value = "";
@@ -173,6 +166,7 @@ function removeTask(id) {
   });
   if (indexTask !== -1) {
     tasks.splice(indexTask, 1);
+    saveTasksOnStorage();
     renderTasks();
   }
 }
@@ -204,6 +198,11 @@ function handleTaskList(event) {
   }
 }
 
+function saveTasksOnStorage() {
+  const stringTasks = JSON.stringify(tasks);
+  localStorage.setItem("taskflow-tasks", stringTasks);
+}
+
 taskCreationForm.addEventListener("submit", handleCreateTask);
 columnsTask.forEach((column) => {
   column.addEventListener("click", handleTaskList);
@@ -218,9 +217,10 @@ columnsTask.forEach((column) => {
     });
     if (taskFound) {
       taskFound.status = column.dataset.status;
+      saveTasksOnStorage();
       renderTasks();
     }
   });
 });
-
+loadTasksFromStorage();
 renderTasks();

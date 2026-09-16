@@ -20,6 +20,7 @@ h1 {
 }
 
 #modal-formulario {
+  position: relative;
   max-width: 500px;
   width: calc(100% - 32px);
   margin: auto;
@@ -99,6 +100,23 @@ h1 {
 }
 #form-criar-tarefa #btn-enviar-tarefa:hover {
   background: #1d4ed8;
+}
+.btn-close-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #334155;
+  background: transparent;
+  color: #94a3b8;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.btn-close-modal:hover {
+  background: #202943;
+  color: #f8fafc;
 }
 .painel-acoes {
   display: flex;

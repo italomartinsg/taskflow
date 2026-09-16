@@ -9,6 +9,7 @@ const filterTask = document.querySelector("#task-filter");
 const modal = document.querySelector("#modal-formulario");
 const btnNewTask = document.querySelector("#nova-tarefa");
 const formErrors = document.querySelectorAll(".form-error");
+const btnCloseModal = document.querySelector(".btn-close-modal");
 let currentPriorityFilter = "all";
 const tasks = [];
 
@@ -323,6 +324,8 @@ btnNewTask.addEventListener("click", () => {
 modal.addEventListener("close", () => {
   clearErrorForm();
 });
-
+btnCloseModal.addEventListener("click", () => {
+  modal.close();
+});
 loadTasksFromStorage();
 renderFilteredTasks();

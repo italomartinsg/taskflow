@@ -65,13 +65,6 @@ function renderTasks(currentTask) {
     const description = document.createElement("p");
     const priority = document.createElement("p");
     const dueDate = document.createElement("p");
-    const btnEdit = document.createElement("button");
-    const btnRemove = document.createElement("button");
-    const label = document.createElement("label");
-    const select = document.createElement("select");
-    const todoOption = document.createElement("option");
-    const inProgressOption = document.createElement("option");
-    const doneOption = document.createElement("option");
 
     taskItem.dataset.id = task.id;
     taskTitle.textContent = task.title;
@@ -82,17 +75,8 @@ function renderTasks(currentTask) {
     description.classList.add("task-description");
     taskItem.appendChild(description);
 
-    switch (task.priority) {
-      case "medium":
-        priority.textContent = `Prioridade: Média`;
-        break;
-      case "high":
-        priority.textContent = `Prioridade: Alta`;
-        break;
-      default:
-        priority.textContent = `Prioridade: Baixa`;
-        break;
-    }
+    priority.textContent = translatePriority(task.priority);
+
     priority.classList.add("task-priority", `task-priority-${task.priority}`);
     taskItem.appendChild(priority);
 
@@ -103,41 +87,9 @@ function renderTasks(currentTask) {
 
       taskItem.appendChild(dueDate);
     }
+    createMobileControls(task, taskItem);
 
-    label.setAttribute("for", `change-status-${task.id}`);
-    label.classList.add("task-status-control");
-    label.textContent = " Alterar status:";
-    taskItem.appendChild(label);
-
-    select.setAttribute("name", "change-status");
-    select.setAttribute("id", `change-status-${task.id}`);
-    select.classList.add("task-status-control");
-    todoOption.value = "todo";
-    todoOption.textContent = "A fazer";
-    inProgressOption.value = "in-progress";
-    inProgressOption.textContent = "Em Andamento";
-    doneOption.value = "done";
-    doneOption.textContent = "Concluída";
-
-    select.append(todoOption, inProgressOption, doneOption);
-
-    select.value = task.status;
-    taskItem.appendChild(select);
-    select.addEventListener("change", () => {
-      task.status = select.value;
-      saveTasksOnStorage();
-      renderFilteredTasks();
-    });
-
-    btnEdit.textContent = "Editar";
-    btnEdit.dataset.action = "edit";
-    btnEdit.classList.add("btn-task", "btn-task-edit");
-    taskItem.appendChild(btnEdit);
-
-    btnRemove.textContent = "Remover";
-    btnRemove.dataset.action = "remove";
-    btnRemove.classList.add("btn-task", "btn-task-remove");
-    taskItem.appendChild(btnRemove);
+    createControlButtons(taskItem);
 
     columnsTask.forEach((column) => {
       if (task.status === column.dataset.status) {
@@ -155,6 +107,68 @@ function renderTasks(currentTask) {
       correctList.appendChild(taskItem);
     }
   });
+  renderEmptyColumns();
+}
+function translatePriority(value) {
+  let priority;
+  if (value === "low") {
+    priority = "Baixa";
+  } else if (value === "medium") {
+    priority = "Média";
+  } else if (value === "high") {
+    priority = "Alta";
+  } else {
+    priority = "Não Definida";
+  }
+  return `Prioridade: ${priority}`;
+}
+function createMobileControls(task, taskItem) {
+  const label = document.createElement("label");
+  const select = document.createElement("select");
+  const todoOption = document.createElement("option");
+  const inProgressOption = document.createElement("option");
+  const doneOption = document.createElement("option");
+
+  label.setAttribute("for", `change-status-${task.id}`);
+  label.classList.add("task-status-control");
+  label.textContent = " Alterar status:";
+  taskItem.appendChild(label);
+
+  select.setAttribute("name", "change-status");
+  select.setAttribute("id", `change-status-${task.id}`);
+  select.classList.add("task-status-control");
+  todoOption.value = "todo";
+  todoOption.textContent = "A fazer";
+  inProgressOption.value = "in-progress";
+  inProgressOption.textContent = "Em Andamento";
+  doneOption.value = "done";
+  doneOption.textContent = "Concluída";
+
+  select.append(todoOption, inProgressOption, doneOption);
+
+  select.value = task.status;
+  taskItem.appendChild(select);
+  select.addEventListener("change", () => {
+    task.status = select.value;
+    saveTasksOnStorage();
+    renderFilteredTasks();
+  });
+}
+function createControlButtons(taskItem) {
+  const btnEdit = document.createElement("button");
+  const btnRemove = document.createElement("button");
+
+  btnEdit.textContent = "Editar";
+  btnEdit.dataset.action = "edit";
+  btnEdit.classList.add("btn-task", "btn-task-edit");
+  taskItem.appendChild(btnEdit);
+
+  btnRemove.textContent = "Remover";
+  btnRemove.dataset.action = "remove";
+  btnRemove.classList.add("btn-task", "btn-task-remove");
+  taskItem.appendChild(btnRemove);
+}
+function renderEmptyColumns() {
   columnsTask.forEach((column) => {
     if (column.children.length === 0) {
       const noTasksMessage = document.createElement("p");
@@ -208,7 +222,6 @@ function handleCreateTask(event) {
       tasks[findIndexTaskEdit] = taskEditObj;
       saveTasksOnStorage();
       modal.close();
-      clearErrorForm();
     }
     editingTaskId = null;
     btnForm.textContent = "Enviar";
@@ -224,7 +237,6 @@ function handleCreateTask(event) {
 
     tasks.push(taskObj);
     modal.close();
-    clearErrorForm();
     saveTasksOnStorage();
   }
   taskTitle.value = "";
